@@ -208,8 +208,5 @@ echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# Enable Fingerprint Boost Driver" >> $CONFIGFILE
-echo "write /sys/kernel/fp_boost/enabled 1" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
 echo "# Enable PDesireAudio" >> $CONFIGFILE
 echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
