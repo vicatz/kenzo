@@ -5,13 +5,13 @@ INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
 TLS="50 1017600:60 1190400:70 1305600:80 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
-BOOST="0:1190400 4:1113600"
-HSFS=1440000
+BOOST="0"
+HSFS=1401600
 HSFB=1382400
-FMS=691200
-FMB=883200
-FMAS=1440000
-FMAB=1843200
+FMS=400000
+FMB=400000
+FMAS=1401600
+FMAB=1804800
 TR=20000
 AID=N
 ABST=0
@@ -28,10 +28,10 @@ TLB="90 1382400:95"
 BOOST="0"
 HSFS=1305600
 HSFB=1190400
-FMS=691200
-FMB=883200
+FMS=400000
+FMB=400000
 FMAS=1305600
-FMAB=1612600
+FMAB=1056000
 TR=30000
 AID=Y
 ABST=0
@@ -46,12 +46,12 @@ elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
 BOOST="0:1305600 4:1305600"
-HSFS=1440000
+HSFS=1401600
 HSFB=1382400
-FMS=691200
-FMB=883200
-FMAS=1440000
-FMAB=1843200
+FMS=400000
+FMB=400000
+FMAS=1401600
+FMAB=1804800
 TR=20000
 AID=N
 ABST=1
@@ -191,7 +191,7 @@ echo "write /sys/module/cpu_boost/parameters/input_boost_freq \"$BOOST\"" >> $CO
 echo "write /sys/module/cpu_boost/parameters/input_boost_ms 50" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# SET IO SCHEDULER" >> $CONFIGFILE
-echo "setprop sys.io.scheduler \"fiops\"" >> $CONFIGFILE
+echo "setprop sys.io.scheduler \"zen\"" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# TOUCH BOOST" >> $CONFIGFILE
 echo "write /sys/module/msm_performance/parameters/touchboost $TBST" >> $CONFIGFILE
@@ -205,15 +205,11 @@ echo "" >> $CONFIGFILE
 echo "# FSYNC" >> $CONFIGFILE
 echo "write /sys/module/sync/parameters/fsync_enabled $DFS" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# DISABLE WAKELOCKS" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_ipa_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_wlan_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_timerfd_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_netlink_ws 0" >> $CONFIGFILE
-echo "write /sys/module/wakeup/parameters/enable_netmgr_wl_ws 0" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# Enable Fingerprint Boost Driver" >> $CONFIGFILE
+echo "write /sys/kernel/fp_boost/enabled 1" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# Enable PDesireAudio" >> $CONFIGFILE
+echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE

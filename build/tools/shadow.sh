@@ -33,9 +33,4 @@
 	mkswap /dev/block/zram0
 	swapon /dev/block/zram0
 	fi
-	
-	write /sys/kernel/fp_boost/enabled 1
-# Enable PDesireAudio
-	write /sys/module/snd_soc_msm8x16_wcd/parameters/uhqa_mode_pdesireaudio 1
-	write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1
 
