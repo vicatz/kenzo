@@ -59,9 +59,6 @@
 #define FPC1020_RESET_HIGH2_US 1250
 #define FPC_TTW_HOLD_TIME 1000
 
-#ifdef CONFIG_MSM_HOTPLUG
-extern void msm_hotplug_resume_timeout(void);
-#endif
 
 struct vreg_config {
 	char *name;
@@ -70,7 +67,7 @@ struct vreg_config {
 	int ua_load;
 };
 
-static const struct vreg_config vreg_conf[] = {
+static const struct vreg_config const vreg_conf[] = {
 	{"vcc_spi", 1800000UL, 1800000UL, 20000,},
 };
 
@@ -87,20 +84,10 @@ struct fpc1020_data {
 
 #ifdef CONFIG_MACH_XIAOMI_KENZO
 unsigned int kenzo_fpsensor = 1;
-extern bool android_binder_security;
 static int __init setup_kenzo_fpsensor(char *str)
 {
-	if (!strncmp(str, "gdx", strlen(str))) {
+	if (!strncmp(str, "gdx", strlen(str)))
 		kenzo_fpsensor = 2;
-		android_binder_security = false;
-		/*
-		 *   Enabling this can break goodix
-		 *   so we disable automatically on detection
-		 */
-		pr_info("%s goodix detected, binder security disabled !\n", __func__);
-	} else {
-		pr_info("%s fpc detected, binder security enabled by default !\n", __func__);
-	}
 
 	return kenzo_fpsensor;
 }
@@ -265,13 +252,35 @@ static const struct attribute_group attribute_group = {
 	.attrs = attributes,
 };
 
-#ifdef CONFIG_MSM_HOTPLUG
-static void __cpuinit msm_hotplug_resume_call(struct work_struct *msm_hotplug_resume_call_work)
+static int fpc1020_input_init(struct fpc1020_data * fpc1020)
 {
-	msm_hotplug_resume_timeout();
+	int ret;
+
+	fpc1020->input_dev = input_allocate_device();
+	if (!fpc1020->input_dev) {
+		pr_err("fingerprint input boost allocation is fucked - 1 star\n");
+		ret = -ENOMEM;
+		goto exit;
+	}
+
+	fpc1020->input_dev->name = "fpc1020";
+	fpc1020->input_dev->evbit[0] = BIT(EV_KEY);
+
+	set_bit(KEY_FINGERPRINT, fpc1020->input_dev->keybit);
+
+	ret = input_register_device(fpc1020->input_dev);
+	if (ret) {
+		pr_err("fingerprint boost input registration is fucked - fixpls\n");
+		goto err_free_dev;
+	}
+
+	return 0;
+
+err_free_dev:
+	input_free_device(fpc1020->input_dev);
+exit:
+	return ret;
 }
-static __refdata DECLARE_WORK(msm_hotplug_resume_call_work, msm_hotplug_resume_call);
-#endif
 
 static int fpc1020_input_init(struct fpc1020_data * fpc1020)
 {
@@ -314,25 +323,34 @@ static irqreturn_t fpc1020_irq_handler(int irq, void *handle)
 
 	if (fpc1020->wakeup_enabled) {
 		wake_lock_timeout(&fpc1020->ttw_wl, msecs_to_jiffies(FPC_TTW_HOLD_TIME));
-#ifdef CONFIG_MSM_HOTPLUG
-		if (msm_enabled && msm_hotplug_scr_suspended &&
-		   !msm_hotplug_fingerprint_called) {
-			msm_hotplug_fingerprint_called = true;
-			schedule_work(&msm_hotplug_resume_call_work);
-		}
-#endif
 	}
 
 	sysfs_notify(&fpc1020->dev->kobj, NULL, dev_attr_irq.attr.name);
 
 	if (!is_display_on()) {
 		sched_set_boost(1);
+/* On touch the fp sensor, boost the cpu even if screen is on */
+#ifdef CONFIG_MSM_HOTPLUG
+	if (fp_bigcore_boost) {
+#endif
+		sched_set_boost(1);
+#ifdef CONFIG_MSM_HOTPLUG
+	}
+#endif
+	if (!is_display_on()) {
 		input_report_key(fpc1020->input_dev, KEY_FINGERPRINT, 1);
 		input_sync(fpc1020->input_dev);
 		input_report_key(fpc1020->input_dev, KEY_FINGERPRINT, 0);
 		input_sync(fpc1020->input_dev);
-		sched_set_boost(0);
 	}
+#ifdef CONFIG_MSM_HOTPLUG
+	if (fp_bigcore_boost) {
+#endif
+
+		sched_set_boost(0);
+#ifdef CONFIG_MSM_HOTPLUG
+	}
+#endif
 
 	return IRQ_HANDLED;
 }
@@ -519,5 +537,3 @@ MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Aleksej Makarov");
 MODULE_AUTHOR("Henrik Tillman <henrik.tillman@fingerprints.com>");
 MODULE_DESCRIPTION("FPC1020 Fingerprint sensor device driver.");
-
-
