@@ -214,7 +214,7 @@ echo "" >> $CONFIGFILE
 echo "# THERMAL SETTINGS" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/enabled y" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/temp_threshold 40" >> $CONFIGFILE
-echo "write /sys/module/msm_thermal/parameters/core_limit_tempdegC 60" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/parameters/core_limit_temp_degC 60" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# Enable PDesireAudio" >> $CONFIGFILE
 echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
