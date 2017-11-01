@@ -10,6 +10,8 @@ ini_set("force_colorspace","rgba");
 fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
 fontresload( "1", "ttf/Roboto-Regular.ttf", "16" ); 
 
+splash(2000, "shadow");
+
 theme("default");
 
 viewbox(
@@ -29,6 +31,22 @@ alert(
   "For best experience -\n\n1.Don't flash over other kernels. Ensure that you either have a previous version of Shadow or the kernel that came with your rom.\n\n2.Do not use any scripts to tune cpu governors, this kernel already does that for your cpu.\n\n",
   "@warning",
   "OK"
+);
+
+selectbox(
+  "\nMaximum A53 CPU Frequency","<@center><b>\nSelect maximum CPU frequency for the little cluster\n</b></@>","","cpu53.prop",
+  "1440MHz","",0,
+  "1401MHz","(stock)",1,
+  "1382MHz","",0,
+  "1305MHz","",0
+);
+
+selectbox(
+  "\nMaximum A72 CPU Frequency","<@center><b>\nSelect maximum CPU frequency for the big cluster\n</b></@>","","cpu72.prop",
+  "1843MHz","",0,
+  "1804MHz","(stock)",1,
+  "1747MHz","",0,
+  "1612MHz","",0
 );
 
 selectbox(
@@ -61,7 +79,7 @@ selectbox(
 selectbox(
   "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not affect users with stock charger.\n</b></@>","","crate.prop",
   "2000 mA (default)","",1,
-  "2400 mA (quick)","",0
+  "2400 mA (quick - This enables USB Fastcharge too)","",0
 );
 
 selectbox(
@@ -77,6 +95,20 @@ selectbox(
   "No, new thermal","",1
 );
 
+menubox(
+  "\nShadow Installer",
+  "<@center>\nReady to install\n\n</@>",
+  "",
+  "menu.prop",
+  "Install Shadow","","@install",
+  "Abort installation","","@trash"
+);
+
+if prop("menu.prop","selected")=="2"
+then
+  exit("");
+endif;
+
 setvar("retstatus",
 install(
   "\nInstalling",
@@ -85,3 +117,14 @@ install(
 );
 
 ini_set("text_next", "Finish");
+
+if getvar("retstatus")=="0" then
+  viewbox(
+  "\nInstallation Completed",
+  "<@center>\nCongratulations!\n"+
+  "Shadow has been successfully installed\n\n\n</@>",
+  ""
+);
+else
+   viewbox("Installation Failed","\n\nInstaller Status: "+ getvar("retstatus"),"@warning");
+endif;

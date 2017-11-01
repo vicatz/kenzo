@@ -1,21 +1,54 @@
 #!/sbin/sh
 
 CONFIGFILE="/tmp/init.shadow.rc"
+val1=$(cat /tmp/aroma/cpu53.prop | cut -d '=' -f2)
+
+  case $val1 in
+	1)
+	  cpu_max_c1=1440000
+	  ;;
+	2)
+	  cpu_max_c1=1401600
+	  ;;
+	3)
+	  cpu_max_c1=1382400
+	  ;;
+	4)
+	  cpu_max_c1=1305600
+	  ;;
+  esac
+
+val2=$(cat /tmp/aroma/cpu72.prop | cut -d '=' -f2)
+
+  case $val2 in
+	1)
+	  cpu_max_c2=1843200
+	  ;;
+	2)
+	  cpu_max_c2=1804800
+	  ;;
+	3)
+	  cpu_max_c2=1747200
+	  ;;
+	4)
+	  cpu_max_c2=1612800
+	  ;;
+  esac
 INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
 TLS="50 1017600:60 1190400:70 1305600:80 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
 BOOST="0"
-HSFS=1401600
+HSFS=$cpu_max_c1
 HSFB=1382400
 FMS=691200
 FMB=883200
-FMAS=1401600
-FMAB=1804800
+FMAS=$cpu_max_c1
+FMAB=$cpu_max_c2
 TR=20000
 AID=N
 ABST=0
-TBST=1
+TBST=0
 GHLS=100
 GHLB=90
 SWAP=40
@@ -46,12 +79,12 @@ elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
 BOOST="0:1305600 4:1305600"
-HSFS=1401600
+HSFS=$cpu_max_c1
 HSFB=1382400
 FMS=691200
 FMB=883200
-FMAS=1401600
-FMAB=1804800
+FMAS=$cpu_max_c1
+FMAB=$cpu_max_c2
 TR=20000
 AID=N
 ABST=1
@@ -123,8 +156,10 @@ echo "# CHARGING RATE" >> $CONFIGFILE
 CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
 if [ $CRATE == 1 ]; then
 CHG=2000
+USB=0
 elif [ $CRATE == 2 ]; then
 CHG=2400
+USB=1
 fi 
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma" >> $CONFIGFILE
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma" >> $CONFIGFILE
@@ -132,6 +167,7 @@ echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp3_icl_ma" >>
 echo "write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma $CHG" >> $CONFIGFILE
 echo "write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma $CHG" >> $CONFIGFILE
 echo "write /sys/module/qpnp_smbcharger/parameters/default_hvdcp3_icl_ma $CHG" >> $CONFIGFILE
+echo "write /sys/kernel/fast_charge/force_fast_charge $USB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DISABLE BCL & CORE CTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/core_control/enabled 0" >> $CONFIGFILE

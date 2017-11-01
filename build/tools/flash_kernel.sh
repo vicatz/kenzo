@@ -30,12 +30,47 @@ dim=/tmp/dt1.img
 elif [ $qc -eq 2 ]; then
 dim=/tmp/dt2.img
 fi
+val1=$(cat /tmp/aroma/cpu53.prop | cut -d '=' -f2)
+
+  case $val1 in
+	1)
+	  cpu_max_c1=" cpu_max_c1=1440000"
+	  ;;
+	2)
+	  cpu_max_c1=" cpu_max_c1=1401600"
+	  ;;
+	3)
+	  cpu_max_c1=" cpu_max_c1=1382400"
+	  ;;
+	4)
+	  cpu_max_c1=" cpu_max_c1=1305600"
+	  ;;
+  esac
+
+val2=$(cat /tmp/aroma/cpu72.prop | cut -d '=' -f2)
+
+  case $val2 in
+	1)
+	  cpu_max_c2=" cpu_max_c2=1843200"
+	  ;;
+	2)
+	  cpu_max_c2=" cpu_max_c2=1804800"
+	  ;;
+	3)
+	  cpu_max_c2=" cpu_max_c2=1747200"
+	  ;;
+	4)
+	  cpu_max_c2=" cpu_max_c2=1612800"
+	  ;;
+  esac
+
 cmd="androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M"
 if [ $selinx -eq 2 ]; then
 cmd=$cmd" androidboot.selinux=enforcing"
 elif [ $selinx -eq 3 ]; then
 cmd=$cmd" androidboot.selinux=permissive"
 fi
+cmd=$cmd$cpu_max_c1$cpu_max_c2
 if [ $therm -eq 1 ]; then
 echo "Using old thermal engine"
 cp /tmp/thermal-engine /system/vendor/bin/thermal-engine
