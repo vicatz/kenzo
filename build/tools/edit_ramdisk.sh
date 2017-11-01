@@ -208,5 +208,14 @@ echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
+echo "write /sys/module/mdss_fb/parameters/backlight_dimmer y" >> $CONFIGFILE
+echo "write /sys/block/mmcblk0/queue/iostats 0" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# THERMAL SETTINGS" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/parameters/enabled y" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/parameters/temp_threshold 40" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/parameters/core_limit_tempdegC 60" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "# Enable PDesireAudio" >> $CONFIGFILE
 echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
+echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_class_ab 1" >> $CONFIGFILE
