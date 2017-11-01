@@ -1,5 +1,5 @@
 ini_set("rom_name",             "Shadow");
-ini_set("rom_version",          "v2.6");
+ini_set("rom_version",          "v2.7");
 ini_set("rom_author",           "energyspear17");
 ini_set("rom_device",           "Kenzo");
 ini_set("rom_date",             "November 1, 2017");
@@ -119,12 +119,28 @@ install(
 ini_set("text_next", "Finish");
 
 if getvar("retstatus")=="0" then
-  viewbox(
-  "\nInstallation Completed",
-  "<@center>\nCongratulations!\n"+
-  "Shadow has been successfully installed\n\n\n</@>",
-  ""
+checkviewbox(
+    "Installation Completed",
+  
+    "<#selectbg_g><b>Congratulations...</b></#>\n\n"+
+    "<b>"+ini_get("rom_name")+"</b> has been installed into your device.\n\n"+
+    "Installer Status: "+getvar("retstatus")+"\n\n",
+	
+    "@welcome",
+
+    "Reboot your device now.",
+
+    "0",
+
+    "reboot_it"
 );
+  
 else
    viewbox("Installation Failed","\n\nInstaller Status: "+ getvar("retstatus"),"@warning");
+endif;
+
+if
+  getvar("reboot_it")=="1"
+then
+  reboot("onfinish");
 endif;
