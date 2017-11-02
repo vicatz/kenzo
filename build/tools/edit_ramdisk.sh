@@ -255,3 +255,7 @@ echo "" >> $CONFIGFILE
 echo "# Enable PDesireAudio" >> $CONFIGFILE
 echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
 echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_class_ab 1" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# KSM" >> $CONFIGFILE
+echo "write /sys/kernel/mm/ksm/run 0" >> $CONFIGFILE
+echo "write /sys/kernel/mm/ksm/run_charging 0" >> $CONFIGFILE
