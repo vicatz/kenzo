@@ -54,7 +54,9 @@ GHLB=90
 SWAP=40
 VFS=100
 GLVL=6
-GFREQ=266666667
+GFREQ=133333333
+TEMPTT=70
+TEMPTL=50
 elif [ $INTERACTIVE == 2 ]; then
 TLS="65 1017600:75 1190400:85"
 TLB="90 1382400:95"
@@ -74,7 +76,9 @@ GHLB=85
 SWAP=20
 VFS=40
 GLVL=7
-GFREQ=200000000
+GFREQ=133333333
+TEMPTT=60
+TEMPTL=40
 elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
@@ -95,6 +99,8 @@ SWAP=60
 VFS=100
 GLVL=6
 GFREQ=266666667
+TEMPTT=80
+TEMPTL=60
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
 if [ $DT2W == 1 ]; then
@@ -249,8 +255,8 @@ echo "write /sys/block/mmcblk0/queue/iostats 0" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# THERMAL SETTINGS" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/enabled y" >> $CONFIGFILE
-echo "write /sys/module/msm_thermal/parameters/temp_threshold 40" >> $CONFIGFILE
-echo "write /sys/module/msm_thermal/parameters/core_limit_temp_degC 60" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/parameters/temp_threshold $TEMPTL" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/parameters/core_limit_temp_degC $TEMPTT" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# Enable PDesireAudio" >> $CONFIGFILE
 echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
