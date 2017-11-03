@@ -57,6 +57,11 @@ GLVL=7
 GFREQ=200000000
 TEMPTT=70
 TEMPTL=50
+LPA=1
+LPT=1035
+LPH=8
+LPP=0
+LPC=6
 elif [ $INTERACTIVE == 2 ]; then
 TLS="65 1017600:75 1190400:85"
 TLB="90 1382400:95"
@@ -79,6 +84,11 @@ GLVL=8
 GFREQ=133333333
 TEMPTT=60
 TEMPTL=40
+LPA=1
+LPT=1050
+LPH=11
+LPP=4
+LPC=6
 elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
@@ -101,6 +111,11 @@ GLVL=6
 GFREQ=266666667
 TEMPTT=80
 TEMPTL=60
+LPA=0
+LPT=1035
+LPH=8
+LPP=0
+LPC=6
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
 if [ $DT2W == 1 ]; then
@@ -265,3 +280,10 @@ echo "" >> $CONFIGFILE
 echo "# KSM" >> $CONFIGFILE
 echo "write /sys/kernel/mm/ksm/run 0" >> $CONFIGFILE
 echo "write /sys/kernel/mm/ksm/run_charging 0" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# LAZYPLUG" >> $CONFIGFILE
+echo "write /sys/module/lazyplug/parameters/lazyplug_active $LPA" >> $CONFIGFILE
+echo "write /sys/module/lazyplug/parameters/cpu_nr_run_threshold $LPT" >> $CONFIGFILE
+echo "write /sys/module/lazyplug/parameters/nr_run_hysteresis $LPH" >> $CONFIGFILE
+echo "write /sys/module/lazyplug/parameters/nr_run_profile_sel $LPP" >> $CONFIGFILE
+echo "write /sys/module/lazyplug/parameters/nr_possible_cores $LPC" >> $CONFIGFILE
