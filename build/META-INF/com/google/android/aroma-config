@@ -86,6 +86,7 @@ selectbox(
   "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\n\nIf you choose yes then display colors will be tuned. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
   "Yes, enhanced colors (warm)","",1,
   "Yes, enhanced colors (cool)","",0,
+  "Yes, enhanced colors (vivid)","",0,
   "No, standard colors","",0
 );
 

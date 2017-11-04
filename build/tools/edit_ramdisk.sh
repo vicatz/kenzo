@@ -53,8 +53,8 @@ GHLS=100
 GHLB=90
 SWAP=40
 VFS=100
-GLVL=6
-GFREQ=133333333
+GLVL=7
+GFREQ=200000000
 TEMPTT=70
 TEMPTL=50
 LPA=1
@@ -80,7 +80,7 @@ GHLS=100
 GHLB=85
 SWAP=20
 VFS=40
-GLVL=7
+GLVL=8
 GFREQ=133333333
 TEMPTT=60
 TEMPTL=40
@@ -167,6 +167,11 @@ echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 256" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"254 254 240"\" >> $CONFIGFILE
 elif [ $COLOR == 3 ]; then
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 270" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 257" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 265" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 256 256"\" >> $CONFIGFILE
+elif [ $COLOR == 4 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 255" >> $CONFIGFILE
