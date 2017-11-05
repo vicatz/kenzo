@@ -102,6 +102,9 @@ fi
 if [ -f /tmp/ramdisk/init.darkness.rc ]; then
 rm /tmp/ramdisk/init.darkness.rc
 fi
+if [ -f /tmp/ramdisk/init.radon.rc ]; then
+rm /tmp/ramdisk/init.radon.rc
+fi
 # COMPATIBILITY FIXES END
 chmod 0750 /tmp/ramdisk/init.shadow.rc
 if [ $(grep -c "import /init.shadow.rc" /tmp/ramdisk/init.rc) == 0 ]; then
