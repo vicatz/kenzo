@@ -128,11 +128,17 @@ elif [ $DT2W == 3 ]; then
 DTP=0
 VIBS=50
 fi
-DFSC=$(cat /tmp/aroma/dfs.prop | cut -d '=' -f2)
-if [ $DFSC == 1 ]; then
-DFS=1
-elif [ $DFSC == 2 ]; then
+DFSC=`grep "item.0.1" /tmp/aroma/mods.prop | cut -d '=' -f2`
+if [ $DFSC = 1 ]; then
 DFS=0
+elif [ $DFSC = 0 ]; then
+DFS=1
+fi
+FC=`grep "item.0.2" /tmp/aroma/mods.prop | cut -d '=' -f2`
+if [ $FC = 1 ]; then
+USB=1
+elif [ $FC = 0 ]; then
+USB=0
 fi
 echo "# VARIABLES FOR SH" >> $CONFIGFILE
 echo "# zrammode=$INTERACTIVE" >> $CONFIGFILE
@@ -182,10 +188,8 @@ echo "# CHARGING RATE" >> $CONFIGFILE
 CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
 if [ $CRATE == 1 ]; then
 CHG=2000
-USB=0
 elif [ $CRATE == 2 ]; then
 CHG=2400
-USB=1
 fi 
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma" >> $CONFIGFILE
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma" >> $CONFIGFILE
@@ -210,6 +214,9 @@ echo "write /sys/devices/system/cpu/cpu3/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu5/online 1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
+if ([ "`grep "ro.build.version.release=8" /system/build.prop`" ] || [ "`grep "ro.build.version.codename=OREO" /system/build.prop`" ]); then
+echo "Skipping Interactive Tweaks to make Compatible with Oreo Builds"
+else
 echo "# TWEAK A53 CLUSTER GOVERNOR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
@@ -236,6 +243,7 @@ echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 400
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq $FMB" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq $FMAB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
+fi
 echo "# ENABLE BCL & CORE CTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/core_control/enabled 0">> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
@@ -277,10 +285,6 @@ echo "# THERMAL SETTINGS" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/enabled y" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/temp_threshold $TEMPTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/core_limit_temp_degC $TEMPTT" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "# Enable PDesireAudio" >> $CONFIGFILE
-echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
-echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_class_ab 1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# KSM" >> $CONFIGFILE
 echo "write /sys/kernel/mm/ksm/run 0" >> $CONFIGFILE

@@ -24,6 +24,10 @@ if [ $nos2 == "nitrogen" ]; then
 echo "NitrogenOS detected, forcing permissive"
 selinx=3
 fi
+if ([ "`grep "ro.build.version.release=8" /system/build.prop`" ] || [ "`grep "ro.build.version.codename=OREO" /system/build.prop`" ]); then
+selinx=3
+echo "Android OREO detected, forcing permissive"
+fi
 zim=/tmp/Image1
 if [ $qc -eq 1 ]; then
 dim=/tmp/dt1.img
@@ -71,6 +75,10 @@ elif [ $selinx -eq 3 ]; then
 cmd=$cmd" androidboot.selinux=permissive"
 fi
 cmd=$cmd$cpu_max_c1$cpu_max_c2
+AUDIO=`grep "item.0.3" /tmp/aroma/mods.prop | cut -d '=' -f2`
+if [ $AUDIO = 1 ]; then
+cmd=$cmd" snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
+fi
 if [ $therm -eq 1 ]; then
 echo "Using old thermal engine"
 cp /tmp/thermal-engine /system/vendor/bin/thermal-engine
