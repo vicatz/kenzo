@@ -24,10 +24,6 @@ if [ $nos2 == "nitrogen" ]; then
 echo "NitrogenOS detected, forcing permissive"
 selinx=3
 fi
-if ([ "`grep "ro.build.version.release=8" /system/build.prop`" ] || [ "`grep "ro.build.version.codename=OREO" /system/build.prop`" ]); then
-selinx=3
-echo "Android OREO detected, forcing permissive"
-fi
 zim=/tmp/Image1
 if [ $qc -eq 1 ]; then
 dim=/tmp/dt1.img

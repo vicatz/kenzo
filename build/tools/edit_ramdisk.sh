@@ -214,9 +214,6 @@ echo "write /sys/devices/system/cpu/cpu3/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu5/online 1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-if ([ "`grep "ro.build.version.release=8" /system/build.prop`" ] || [ "`grep "ro.build.version.codename=OREO" /system/build.prop`" ]); then
-echo "Skipping Interactive Tweaks to make Compatible with Oreo Builds"
-else
 echo "# TWEAK A53 CLUSTER GOVERNOR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
@@ -243,7 +240,6 @@ echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 400
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq $FMB" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq $FMAB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-fi
 echo "# ENABLE BCL & CORE CTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/core_control/enabled 0">> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
