@@ -292,3 +292,10 @@ echo "write /sys/module/lazyplug/parameters/cpu_nr_run_threshold $LPT" >> $CONFI
 echo "write /sys/module/lazyplug/parameters/nr_run_hysteresis $LPH" >> $CONFIGFILE
 echo "write /sys/module/lazyplug/parameters/nr_run_profile_sel $LPP" >> $CONFIGFILE
 echo "write /sys/module/lazyplug/parameters/nr_possible_cores $LPC" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+VOLT=$(cat /tmp/aroma/uv.prop | cut -d '=' -f2)
+if [ $VOLT == 1 ]; then
+echo "# CPU & GPU UV" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/GPU_mV_table \"700 720 760 800 860 900 920 980 1020\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table \"740 760 820 920 980 1020 1050 1060 1070 780 800 870 910 970 1020 1040\"" >> $CONFIGFILE
+fi
