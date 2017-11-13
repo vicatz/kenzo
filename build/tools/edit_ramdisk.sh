@@ -128,11 +128,17 @@ elif [ $DT2W == 3 ]; then
 DTP=0
 VIBS=50
 fi
-DFSC=$(cat /tmp/aroma/dfs.prop | cut -d '=' -f2)
-if [ $DFSC == 1 ]; then
-DFS=1
-elif [ $DFSC == 2 ]; then
+DFSC=`grep "item.0.1" /tmp/aroma/mods.prop | cut -d '=' -f2`
+if [ $DFSC = 1 ]; then
 DFS=0
+elif [ $DFSC = 0 ]; then
+DFS=1
+fi
+FC=`grep "item.0.2" /tmp/aroma/mods.prop | cut -d '=' -f2`
+if [ $FC = 1 ]; then
+USB=1
+elif [ $FC = 0 ]; then
+USB=0
 fi
 echo "# VARIABLES FOR SH" >> $CONFIGFILE
 echo "# zrammode=$INTERACTIVE" >> $CONFIGFILE
@@ -182,10 +188,8 @@ echo "# CHARGING RATE" >> $CONFIGFILE
 CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
 if [ $CRATE == 1 ]; then
 CHG=2000
-USB=0
 elif [ $CRATE == 2 ]; then
 CHG=2400
-USB=1
 fi 
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma" >> $CONFIGFILE
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma" >> $CONFIGFILE
@@ -278,10 +282,6 @@ echo "write /sys/module/msm_thermal/parameters/enabled y" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/temp_threshold $TEMPTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/parameters/core_limit_temp_degC $TEMPTT" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# Enable PDesireAudio" >> $CONFIGFILE
-echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_uhqa_mode 1" >> $CONFIGFILE
-echo "write /sys/module/snd_soc_msm8x16_wcd/parameters/pdesireaudio_class_ab 1" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
 echo "# KSM" >> $CONFIGFILE
 echo "write /sys/kernel/mm/ksm/run 0" >> $CONFIGFILE
 echo "write /sys/kernel/mm/ksm/run_charging 0" >> $CONFIGFILE
@@ -292,3 +292,10 @@ echo "write /sys/module/lazyplug/parameters/cpu_nr_run_threshold $LPT" >> $CONFI
 echo "write /sys/module/lazyplug/parameters/nr_run_hysteresis $LPH" >> $CONFIGFILE
 echo "write /sys/module/lazyplug/parameters/nr_run_profile_sel $LPP" >> $CONFIGFILE
 echo "write /sys/module/lazyplug/parameters/nr_possible_cores $LPC" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+VOLT=$(cat /tmp/aroma/uv.prop | cut -d '=' -f2)
+if [ $VOLT == 1 ]; then
+echo "# CPU & GPU UV" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/GPU_mV_table \"700 720 760 800 860 900 920 980 1020\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table \"740 760 820 920 980 1020 1050 1060 1070 780 800 870 910 970 1020 1040\"" >> $CONFIGFILE
+fi

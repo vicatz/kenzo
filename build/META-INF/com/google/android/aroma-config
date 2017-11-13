@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Shadow");
-ini_set("rom_version",          "v3.1");
+ini_set("rom_version",          "v3.3 Final");
 ini_set("rom_author",           "energyspear17");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "November 5, 2017");
+ini_set("rom_date",             "November 8, 2017");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
@@ -71,15 +71,15 @@ selectbox(
 );
 
 selectbox(
-  "\n\n<@center>Select fsync</@>","<@center><b>\n\n\n\n\n\n\nKeeping fsync enabled will give more stability, keep this disabled if you prefer more performance over stability.\n</b></@>","","dfs.prop",
-  "Enable","",1,
-  "Disable","",0
+  "\n\n<@center>Apply UV to CPU(LITTLE) and GPU ?\nWarning ! </@>","<@center><b>\n\n\n\n\n\n\nThis will change your stock voltages.\nSelect NO if you are unsure about this.\n</b></@>","","uv.prop",
+  "Yes, apply UV ","",0,
+  "No ","",1
 );
 
 selectbox(
   "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not affect users with stock charger.\n</b></@>","","crate.prop",
   "2000 mA (default)","",1,
-  "2400 mA (quick - This enables USB Fastcharge too)","",0
+  "2400 mA (quick)","",0
 );
 
 selectbox(
@@ -94,6 +94,13 @@ selectbox(
   "\n\nWant old thermal engine ?","<@center><b>\n\n\n\n\n\n\nIf you have any slow charging issue then only it is recommended to select yes here.\n</b></@>","","thermal.prop",
   "Yes, old thermal","",0,
   "No, new thermal","",1
+);
+
+checkbox(
+  "\nOther settings","<@center><b>\nSelect the mods you want to install</b>\n\n</@>","","mods.prop",
+  "Disable fsync","Faster fileystem performance, but risk of data loss",0,
+  "USB fastcharge","Increase charge current while charging via USB",0,
+  "Audio mod capability","Disable audio codec power gating",0
 );
 
 menubox(
